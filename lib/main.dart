@@ -3,7 +3,12 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'quiz_brain.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -22,10 +27,11 @@ class _MyAppState extends State<MyApp> {
     bool answerCheck = quizBrain.getQuestionAnswer();
     setState(() {
       if (quizBrain.isFinished() == true) {
+        print("isFinished");
         Alert(
           context: context,
-          title: 'Finished!',
-          desc: 'You\'ve reached the end of the quiz.',
+          title: "Finished!",
+          desc: "You\'ve reached the end of the quiz.",
         ).show();
         quizBrain.reset();
         scoreKeeper = [];
