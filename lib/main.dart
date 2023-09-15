@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'quiz_brain.dart';
 
 void main() {
@@ -12,20 +13,45 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-List<Widget> scoreKeeper = [
-  const Icon(
-    Icons.check,
-    color: Colors.green,
-  ),
-  const Icon(
-    Icons.close,
-    color: Colors.red,
-  ),
-];
+List<Widget> scoreKeeper = [];
 
 QuizBrain quizBrain = QuizBrain();
 
 class _MyAppState extends State<MyApp> {
+  void checkAnswer(bool userPickedAnswer) {
+    bool answerCheck = quizBrain.getQuestionAnswer();
+    setState(() {
+      if (quizBrain.isFinished() == true) {
+        Alert(
+          context: context,
+          title: 'Finished!',
+          desc: 'You\'ve reached the end of the quiz.',
+        ).show();
+        quizBrain.reset();
+        scoreKeeper = [];
+      }
+      if (answerCheck == userPickedAnswer) {
+        print('Right');
+        scoreKeeper.add(
+          const Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        print('Wrong');
+        scoreKeeper.add(
+          const Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        );
+      }
+
+      quizBrain.nextQuestion();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -70,23 +96,7 @@ class _MyAppState extends State<MyApp> {
                             color: Colors.green,
                             child: TextButton(
                               onPressed: () {
-                                bool answerCheck =
-                                    quizBrain.getQuestionAnswer();
-                                if (answerCheck == true) {
-                                  print('Right');
-                                } else {
-                                  print('Wrong');
-                                }
-                                setState(() {
-                                  quizBrain.nextQuestion();
-
-                                  scoreKeeper.add(
-                                    const Icon(
-                                      Icons.check,
-                                      color: Colors.green,
-                                    ),
-                                  );
-                                });
+                                checkAnswer(true);
                               },
                               child: const Text(
                                 'True',
@@ -107,22 +117,7 @@ class _MyAppState extends State<MyApp> {
                             color: Colors.red,
                             child: TextButton(
                               onPressed: () {
-                                bool answerCheck =
-                                    quizBrain.getQuestionAnswer();
-                                if (answerCheck == false) {
-                                  print('Right');
-                                } else {
-                                  print('Wrong');
-                                }
-                                setState(() {
-                                  quizBrain.nextQuestion();
-                                  scoreKeeper.add(
-                                    const Icon(
-                                      Icons.close,
-                                      color: Colors.red,
-                                    ),
-                                  );
-                                });
+                                checkAnswer(false);
                               },
                               child: const Text(
                                 'False',
